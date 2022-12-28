@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<base:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:base="clr-namespace:SteamBot.Framework"
+             xmlns:local="clr-namespace:SteamBot.ViewModels"
+             x:TypeArguments="local:TeamViewModel"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="local:TeamViewModel"
+             x:Class="SteamBot.Pages.TeamPage"
+             Title="TeamPage">
+    <ScrollView Margin="10">
+        <Frame
+               HorizontalOptions="Fill"
+               Padding="8" CornerRadius="10"
+               HasShadow="True">
+            <Grid
+               HorizontalOptions="{OnPlatform WinUI=Center}"
+               mct:StateContainer.ShouldAnimateOnStateChange="True"
+               mct:StateContainer.CurrentState="{Binding UiState}">
+                <mct:StateContainer.StateViews>
+                    <ActivityIndicator VerticalOptions="CenterAndExpand" IsRunning="True" mct:StateView.StateKey="Loading"/>
+                    <VerticalStackLayout mct:StateView.StateKey="Start" Spacing="10" HorizontalOptions="Start">
+                        <Picker WidthRequest="{OnPlatform WinUI=300}" SelectedItem="{Binding SelectedTeam}" ItemsSource="{Binding Teams}" Title="Select Team to edit"/>
+                        <Entry Text="{Binding TeamName, Mode=TwoWay}" Placeholder="New team name"/>
+                        <Button HorizontalOptions="Fill" Command="{Binding ApplyCommand}" Text="Apply"/>
+                    </VerticalStackLayout>
+                </mct:StateContainer.StateViews>
+            </Grid>
+        </Frame>
+    </ScrollView>
+</base:BasePage>

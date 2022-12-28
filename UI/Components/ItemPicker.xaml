@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<mct:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SteamBot.UI.Components.ItemPicker"
+             xmlns:local="clr-namespace:SteamBot.ViewModels"
+             Color="Transparent"
+           CanBeDismissedByTappingOutsideOfPopup="False"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="local:ItemPickerViewModel">
+    <Frame Margin="15,15,0,0" HorizontalOptions="Fill" Padding="8" CornerRadius="10" HasShadow="True">
+        <VerticalStackLayout Spacing="5">
+            <SearchBar x:Name="searchBar"
+                           SearchCommand="{Binding SearchCommand}"
+                           SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"
+                           Placeholder="Search GCmessage" />
+            <ScrollView MaximumHeightRequest="300">
+                <CollectionView SelectionMode="Single" SelectionChanged="CollectionView_SelectionChanged" ItemsSource="{Binding Items}"/>
+            </ScrollView>
+        </VerticalStackLayout>
+    </Frame>
+</mct:Popup>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<base:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:base="clr-namespace:SteamBot.Framework"
+             xmlns:local="clr-namespace:SteamBot.ViewModels"
+             x:TypeArguments="local:SpamViewModel"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="local:SpamViewModel"
+             x:Class="SteamBot.Pages.SpamPage"
+             Title="Spam Team Invite message to account">
+    <ScrollView Margin="10">
+        <Frame 
+               Padding="8" CornerRadius="10"
+               HasShadow="True">
+            <Grid mct:StateContainer.ShouldAnimateOnStateChange="True"
+                  HorizontalOptions="{OnPlatform WinUI=Center}"
+                  mct:StateContainer.CurrentState="{Binding UiState}">
+                <mct:StateContainer.StateViews>
+                    <VerticalStackLayout mct:StateView.StateKey="Loading" VerticalOptions="CenterAndExpand">
+                        <ActivityIndicator IsRunning="True"/>
+                        <Label HorizontalOptions="Center" Text="Waiting until dota load..."/>
+                    </VerticalStackLayout>
+
+                    <VerticalStackLayout mct:StateView.StateKey="Start" WidthRequest="{OnPlatform WinUI=300}" Spacing="10" HorizontalOptions="Start">
+                        <Picker SelectedItem="{Binding SelectedTeam}" ItemsSource="{Binding Teams}" WidthRequest="{OnPlatform WinUI=300}" Title="Select Team to invite from"/>
+                        <Entry MaxLength="12" Text="{Binding TargetId, Mode=TwoWay}" Keyboard="Numeric" Placeholder="Target account id"/>
+                        <FlexLayout HeightRequest="40" JustifyContent="SpaceBetween" AlignItems="Center">
+                            <Label Text="Auto kick on accept invite"/>
+                            <CheckBox IsChecked="{Binding AutoKick, Mode=TwoWay}"/>
+                        </FlexLayout>
+                        <Grid 
+                            HorizontalOptions="{OnPlatform Android=Fill}"
+                            mct:StateContainer.ShouldAnimateOnStateChange="True"
+                            mct:StateContainer.CurrentState="{Binding ButtonState}">
+                            <mct:StateContainer.StateViews>
+                                <Button mct:StateView.StateKey="Start" Command="{Binding StartSpammingCommand}" Text="Start Spaming"/>
+                                <Button mct:StateView.StateKey="Stop" Command="{Binding StopSpammingCommand}" Text="Stop Spaming" BackgroundColor="Red"/>
+                            </mct:StateContainer.StateViews>
+                        </Grid>
+                    </VerticalStackLayout>
+                </mct:StateContainer.StateViews>
+            </Grid>
+        </Frame>
+    </ScrollView>
+</base:BasePage>

@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<base:BasePage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:base="clr-namespace:SteamBot.Framework"
+             xmlns:local="clr-namespace:SteamBot.ViewModels"
+             x:TypeArguments="local:UtilViewModel"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:DataType="local:UtilViewModel"
+             Title="Utils"
+             x:Class="SteamBot.Pages.UtilPage">
+
+    <Grid RowDefinitions="*, 200">
+        <ScrollView Margin="0,0,0,10">
+            <Frame  Padding="8" CornerRadius="10" HasShadow="True">
+                <VerticalStackLayout  Spacing="10" HorizontalOptions="{OnPlatform WinUI=Center}">
+                    <Label Text="You can change your account name"/>
+                    <Entry Text="{Binding AccountName, Mode=TwoWay}"  Placeholder="New name"/>
+                    <Button Command="{Binding ChangeNameCommand}"  Text="Apply"/>
+                    <Button BackgroundColor="Transparent" Margin="5,5,5,20" Text="Toggle Account Online Status" Command="{Binding ToggleOnlineCommand}" VerticalOptions="End"/>
+                </VerticalStackLayout>
+            </Frame>
+        </ScrollView>
+        <Frame Grid.Row="1" Padding="8" CornerRadius="10" HasShadow="True">
+            <StackLayout>
+                <Label Text="Log"
+                       FontSize="16"
+                       FontAttributes="Bold" />
+                <BoxView 
+                     Color="Gray"
+                     HeightRequest="2"
+                     HorizontalOptions="Fill" />
+                <ScrollView  Margin="0,10,0,0" VerticalOptions="StartAndExpand">
+                    <Label Text="{Binding Log}"/>
+                </ScrollView>
+            </StackLayout>
+        </Frame>
+    </Grid>
+
+</base:BasePage>
