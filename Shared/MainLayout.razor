@@ -1,0 +1,58 @@
+﻿@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+
+<MudThemeProvider Theme="OrangeTheme" @ref="@_mudThemeProvider" @bind-IsDarkMode="@_isDarkMode" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar Elevation="1">
+        <MudText Typo="Typo.h5" Class="ml-3">@Location</MudText>
+    </MudAppBar>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Medium">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+
+@code{
+    public string Location { get; set; }
+    private bool _isDarkMode;
+    private MudThemeProvider _mudThemeProvider;
+    MudTheme OrangeTheme = new MudTheme()
+        {
+            Palette = new Palette()
+            {
+                Primary = Colors.Orange.Default,
+                Secondary = Colors.Blue.Accent4,
+                AppbarBackground = Colors.Blue.Default,
+                TextPrimary = Colors.Orange.Lighten1,
+            },
+            PaletteDark = new PaletteDark()
+            {
+                Primary = Colors.Orange.Lighten1,
+                TextPrimary = Colors.Orange.Lighten1,
+            }
+        };
+
+    protected override void OnInitialized()
+    {
+        Navigation.LocationChanged += HandleLocationChanged;
+        Navigation.NavigateTo("login");
+    }
+
+    private void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        Location = e.Location.Split('/').Last();
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+            StateHasChanged();
+        }
+    }
+}

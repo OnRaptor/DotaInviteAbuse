@@ -1,0 +1,65 @@
+﻿@using DotaInviteAbuse.Services
+@using SteamKit2.GC;
+@using SteamKit2.GC.Dota.Internal;
+@inject DotaTeamService teamService
+@inject DotaClient dota
+
+<MudPaper Class="pa-5 rounded-0" Elevation="0">
+	<MudStack Spacing="5">
+		<MudSelect @bind-Value="selectedTeam" T="TeamInfo" Label="Select Team to invite from" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
+			@foreach(var team in Teams)
+			{
+				<MudSelectItem Value="@team">@team.Name</MudSelectItem>
+			}
+		</MudSelect>
+		<MudTextField InputMode="InputMode.numeric" InputType="InputType.Number" @bind-Value="@TargetId" Label="Target account id" />
+		<MudCheckBox @bind-Checked="@Autokick" Label="AutoKick on invite accept"/>
+		<MudButton OnClick="Spam" Disabled="@(string.IsNullOrWhiteSpace(TargetId) || selectedTeam == null)" Color="@(IsSpamming ? Color.Error : Color.Primary)" Variant="Variant.Outlined">
+			@if (IsSpamming){
+				<span>Stop</span>
+			}
+			else
+			{
+				<span>Start</span>
+			}
+		</MudButton>
+	</MudStack>
+</MudPaper>
+
+@code{
+	public List<TeamInfo> Teams = new List<TeamInfo>();
+	public TeamInfo selectedTeam;
+	public string TargetId { get; set; }
+	public bool Autokick { get; set; } = true;
+	public bool IsSpamming;
+
+	protected override void OnInitialized()
+	{
+		teamService.teamInfo += OnTeamInfo;
+		teamService.teamEdited += (e) => teamService.LoadTeams(); 
+		if (dota.IsLoaded)
+			teamService.LoadTeams();
+		else
+			dota.DotaLoaded += () => teamService.LoadTeams();
+	}
+
+	private void OnTeamInfo(ClientGCMsgProtobuf<CMsgDOTATeamsInfo> response) {
+		Teams = response.Body.teams.Select(s => new TeamInfo { Name = s.name, Id = s.team_id }).ToList();
+		selectedTeam = null;
+	}
+
+	public void Spam()
+	{
+		if (IsSpamming)
+			teamService.StopSpam(Autokick);
+		else
+			teamService.StartSpam(selectedTeam.Id, uint.Parse(TargetId), Autokick);
+		IsSpamming = !IsSpamming;
+	}
+
+	public class TeamInfo
+	{
+		public string Name { get; set; }
+		public uint Id { get; set; }
+	}
+}

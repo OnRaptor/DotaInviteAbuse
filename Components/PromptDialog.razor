@@ -1,0 +1,22 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudTextField AutoFocus="true" @bind-Value="Prompt" Label="@Placeholder"/>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Text" OnClick="Submit">Submit</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [Parameter] public string Placeholder { get; set; }
+
+    protected override void OnInitialized()
+    {
+        MudDialog.Options.CloseButton = true;
+        MudDialog.Options.CloseOnEscapeKey = true;
+        MudDialog.SetOptions(MudDialog.Options);
+    }
+
+    public string Prompt { get; set; }
+    void Submit() => MudDialog.Close(DialogResult.Ok(Prompt));
+}

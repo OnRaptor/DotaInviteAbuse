@@ -1,0 +1,53 @@
+﻿@using DotaInviteAbuse.Services
+@inject DotaClient dota
+@inject ISnackbar Snackbar
+
+<MudStack Class="d-flex justify-space-between">
+	<MudPaper Class="pa-5 rounded-0" Elevation="0">
+		<MudStack Spacing="5">
+			<MudText>
+				Change your account name:
+			</MudText>
+			<MudTextField Immediate="true" @bind-Value="Name" Label="Account Name" />
+			<MudButton OnClick="Apply" Disabled="@(string.IsNullOrWhiteSpace(Name))" Variant="Variant.Outlined">
+				Apply
+			</MudButton>
+
+			<MudButton OnClick="ToglleOnline">
+				Toggle Online Status
+			</MudButton>
+		</MudStack>
+	</MudPaper>
+
+	<MudPaper Height="100" Class="pa-5 rounded-0" Elevation="0">
+		<MudText Typo="Typo.body1">
+			Log
+		</MudText>
+		<MudDivider/>
+		<MudText Typo="Typo.body2">
+			@Log
+		</MudText>
+	</MudPaper>
+</MudStack>
+
+@code{
+	public string Log { get; set; }
+	public string Name { get; set; }
+
+	protected override void OnInitialized()
+	{
+		Log = dota.Log.ToString();
+		dota.LogUpdated += (line) => Log += $"{line}\n";
+		Name = dota.AccountName;
+	}
+
+	public void ToglleOnline() {
+		dota.ToggleOnline();
+		Snackbar.Add("Online toggled", Severity.Info);
+	}
+	
+	public void Apply() {
+		dota.AccountName = Name;
+		Snackbar.Add("Account Name Changed!", Severity.Success);
+	}
+}

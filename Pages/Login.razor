@@ -1,0 +1,105 @@
+﻿@page "/login"
+@inject NavigationManager Navigation
+@using DotaInviteAbuse.Services
+@using DotaInviteAbuse.Components
+@using SteamKit2;
+@inject DotaClient dota
+@inject NavigationManager Navigation
+
+<MudPaper Class="pa-8 mt-15" Outlined="true">
+	<MudStack Spacing="5">
+		<MudText Typo="Typo.h5">
+			Login to Steam Account
+		</MudText>
+		<MudTextField Immediate="true" AutoFocus="true" @bind-Value="LoginValue" Label="Login" Variant="Variant.Text" />
+		<MudTextField InputType="InputType.Password" Immediate="true" @bind-Value="PasswordValue" Label="Password" Variant="Variant.Text" />
+		<MudButton Disabled="@(string.IsNullOrWhiteSpace(LoginValue) || string.IsNullOrWhiteSpace(PasswordValue))" Variant="Variant.Outlined" OnClick="LoginSteam">
+			@if (IsLoading)
+			{
+				<MudProgressCircular Color="Color.Primary" Size="Size.Small" Indeterminate="true"/>
+			}
+			else
+			{
+				<span>Login</span>
+			}
+		</MudButton>
+	</MudStack>
+</MudPaper>
+
+@code{
+	[Inject] private IDialogService DialogService { get; set; }
+
+	public string LoginValue { get; set; }
+	public string PasswordValue { get; set; }
+	public bool IsLoading { get; set; }
+
+	protected override void OnAfterRender(bool firstRender)
+	{
+		base.OnAfterRender(firstRender);
+		App.Current.Windows.FirstOrDefault().Destroying += (s, e) => dota.Exit();
+
+		if (firstRender)
+			dota.LoggedIn += Dota_LoggedIn;
+	}
+
+	void LoginSteam()
+	{
+		dota.Connect(LoginValue, PasswordValue);
+		IsLoading = true;
+	}
+
+	private async void Dota_LoggedIn(SteamUser.LoggedOnCallback callback)
+	{
+		if (callback.Result != EResult.OK)
+		{
+			switch (callback.Result)
+			{
+				case EResult.TwoFactorCodeMismatch:
+					var parameters = new DialogParameters();
+					parameters.Add("Placeholder", "Your Steam Guard code");
+					var result = await MainThread.InvokeOnMainThreadAsync(async () => await DialogService.Show<PromptDialog>("Guard code mismatch", parameters).Result);
+					var guard = (string)result.Data;
+					if (guard != null)
+						dota.Connect(LoginValue, PasswordValue, guard: guard);
+					break;
+				case EResult.AccountLoginDeniedNeedTwoFactor:
+					parameters = new DialogParameters();
+					parameters.Add("Placeholder", "Your Steam Guard code");
+					result = await MainThread.InvokeOnMainThreadAsync(async () => await DialogService.Show<PromptDialog>("Steam Guard", parameters).Result);
+					guard = (string)result.Data;
+					if (guard != null)
+						dota.Connect(LoginValue, PasswordValue, guard: guard);
+					break;
+
+				case EResult.InvalidLoginAuthCode:
+				case EResult.AccountLogonDenied:
+					parameters = new DialogParameters();
+					parameters.Add("Placeholder", "Code");
+					result = await MainThread.InvokeOnMainThreadAsync(async () => await DialogService.Show<PromptDialog>("Email verify", parameters).Result);
+					var authcode = (string)result.Data;
+					if (authcode != null)
+						dota.Connect(LoginValue, PasswordValue, authcode: authcode);
+					break;
+
+				case EResult.InvalidPassword:
+				case EResult.InvalidName:
+				case EResult.InvalidEmail:
+					await MainThread.InvokeOnMainThreadAsync(async () => await DialogService.ShowMessageBox("Error", "Check login or password"));
+					break;
+
+				case EResult.RateLimitExceeded:
+					await MainThread.InvokeOnMainThreadAsync(async () => await DialogService.ShowMessageBox("Error", "Rate limit reached\nPlease try later"));
+					break;
+
+				default:
+					await MainThread.InvokeOnMainThreadAsync(async () => await DialogService.ShowMessageBox("Error", "Unresolved error:\n" + callback.ExtendedResult));
+					break;
+			}
+			IsLoading = false;
+			await MainThread.InvokeOnMainThreadAsync(() => StateHasChanged());
+			return;
+		}
+		IsLoading = false;
+		Navigation.NavigateTo("main");
+	}
+}
