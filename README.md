@@ -2,19 +2,24 @@
 Possibilities:
 - Spam invites to any account from selected team
 - Change team name
+- Create new team
 - Change account nickname
 
 For *fun* purposes **ONLY**
 
+## Download
+#### Download from [last release](https://github.com/OnRaptor/DotaInviteAbuse/releases/latest) page
+
 # Screenshots
 - Login Page  
-![image](https://user-images.githubusercontent.com/58369670/227219943-5ac84219-d52c-4c79-9ae2-72b21d98350e.png)
-- Spam invites tab  
-![image](https://user-images.githubusercontent.com/58369670/227220427-10445822-31de-4b8f-a872-d11bb62cfb70.png)
-- Editing team info tab  
-![image](https://user-images.githubusercontent.com/58369670/227220524-2fa7e913-cd9b-44fa-bc66-3b1baf0a8f62.png)
-- Utils tab  
-![image](https://user-images.githubusercontent.com/58369670/227220597-53c5a888-e5bd-4350-bc5c-847276c7b582.png)
+![image](https://github.com/OnRaptor/DotaInviteAbuse/assets/58369670/082d89a4-97be-4597-9672-928d9e5e772f)
 
-## Download
-#### Check [releases](https://github.com/OnRaptor/DotaInviteAbuse/releases) page
+- Spam invites tab  
+![image](https://github.com/OnRaptor/DotaInviteAbuse/assets/58369670/0ede9a7b-12ce-4079-9fc7-ff2f0d03c65c)
+
+- Editing team info tab  
+![image](https://github.com/OnRaptor/DotaInviteAbuse/assets/58369670/757def7d-370f-4108-a672-41e4fbaf41ae)
+
+- Utils tab  
+![image](https://github.com/OnRaptor/DotaInviteAbuse/assets/58369670/0e76a241-3a50-43ea-84fb-0dd4c6e37415)
+
