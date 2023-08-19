@@ -16,6 +16,9 @@ namespace DotaInviteAbuse.Services
 		public delegate void EditTeamResponse(ClientGCMsgProtobuf<CMsgDOTAEditTeamDetailsResponse> response);
 		public event EditTeamResponse teamEdited;
 
+		public delegate void CreateTeamResponse(ClientGCMsgProtobuf<CMsgDOTACreateTeamResponse> response);
+		public event CreateTeamResponse teamCreated;
+
 		public DotaTeamService(DotaClient _dota)
 		{
 			dota = _dota;
@@ -23,7 +26,8 @@ namespace DotaInviteAbuse.Services
 			messageMap = new Dictionary<uint, Action<object>>
 			{
 				{ ( uint )EDOTAGCMsg.k_EMsgGCToClientTeamsInfo, (r) =>  teamInfo(new ClientGCMsgProtobuf<CMsgDOTATeamsInfo>((IPacketGCMsg)r))},
-				{ ( uint )EDOTAGCMsg.k_EMsgGCEditTeamDetailsResponse, (r) =>  teamEdited(new ClientGCMsgProtobuf<CMsgDOTAEditTeamDetailsResponse>((IPacketGCMsg)r))}
+				{ ( uint )EDOTAGCMsg.k_EMsgGCEditTeamDetailsResponse, (r) =>  teamEdited(new ClientGCMsgProtobuf<CMsgDOTAEditTeamDetailsResponse>((IPacketGCMsg)r))},
+				{ ( uint )EDOTAGCMsg.k_EMsgGCCreateTeamResponse, (r) =>  teamCreated(new ClientGCMsgProtobuf<CMsgDOTACreateTeamResponse>((IPacketGCMsg)r))},
 			};
 		}
 
@@ -87,9 +91,17 @@ namespace DotaInviteAbuse.Services
 			dota.gameCoordinator.Send(editDetails, APPID);
 		}
 
+		public void CreateTeam(string name)
+		{
+			var newTeam = new ClientGCMsgProtobuf<CMsgDOTACreateTeam>((uint)EDOTAGCMsg.k_EMsgGCCreateTeam);
+			newTeam.Body.name = name;
+			dota.gameCoordinator.Send(newTeam, APPID);
+		}
+
 		private void Dota_GCMesage(SteamKit2.SteamGameCoordinator.MessageCallback callback)
 		{
 			Action<object> func;
+			
 			if (!messageMap.TryGetValue(callback.EMsg, out func))
 				return;
 

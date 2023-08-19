@@ -4,7 +4,7 @@
 @inject DotaTeamService teamService
 @inject DotaClient dota
 
-<MudPaper Class="pa-5 rounded-0" Elevation="0">
+<MudPaper Class="pa-5 rounded-5 mt-5" Elevation="0">
 	<MudStack Spacing="5">
 		<MudSelect @bind-Value="selectedTeam" T="TeamInfo" Label="Select Team to invite from" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter">
 			@foreach(var team in Teams)

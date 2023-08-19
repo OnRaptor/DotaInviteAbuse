@@ -5,15 +5,10 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>
-    <MudAppBar Elevation="1">
-        <MudText Typo="Typo.h5" Class="ml-3">@Location</MudText>
-    </MudAppBar>
-    <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Medium">
-            @Body
-        </MudContainer>
-    </MudMainContent>
+<MudLayout >
+    <MudContainer Class="d-grid" MaxWidth="MaxWidth.Medium">
+        @Body
+    </MudContainer>
 </MudLayout>
 
 @code{
@@ -27,7 +22,7 @@
                 Primary = Colors.Orange.Default,
                 Secondary = Colors.Blue.Accent4,
                 AppbarBackground = Colors.Blue.Default,
-                TextPrimary = Colors.Orange.Lighten1,
+                TextPrimary = Colors.Amber.Default,
             },
             PaletteDark = new PaletteDark()
             {
@@ -52,7 +47,14 @@
         if (firstRender)
         {
             _isDarkMode = await _mudThemeProvider.GetSystemPreference();
+            await _mudThemeProvider.WatchSystemPreference(OnSystemPreferenceChanged);
             StateHasChanged();
         }
+    }
+
+    private async Task OnSystemPreferenceChanged(bool newValue)
+    {
+        _isDarkMode = newValue;
+        StateHasChanged();
     }
 }

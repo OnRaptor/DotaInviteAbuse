@@ -2,8 +2,8 @@
 @inject DotaClient dota
 @inject ISnackbar Snackbar
 
-<MudStack Class="d-flex justify-space-between">
-	<MudPaper Class="pa-5 rounded-0" Elevation="0">
+<MudStack Class="d-flex justify-space-between mt-5">
+	<MudPaper Class="pa-5 rounded-5" Elevation="0">
 		<MudStack Spacing="5">
 			<MudText>
 				Change your account name:
@@ -19,14 +19,20 @@
 		</MudStack>
 	</MudPaper>
 
-	<MudPaper Height="100" Class="pa-5 rounded-0" Elevation="0">
+	<MudPaper Class="pa-5 rounded-5" Elevation="0">
 		<MudText Typo="Typo.body1">
 			Log
 		</MudText>
 		<MudDivider/>
-		<MudText Typo="Typo.body2">
+		<MudText Style="max-height:250px;" Class="overflow-scroll" Typo="Typo.body2">
 			@Log
 		</MudText>
+		@if(Log != "")
+		{
+			<MudButton OnClick="ClearLog" Color="Color.Error" Variant="Variant.Outlined">
+				Clear
+			</MudButton>			
+		}
 	</MudPaper>
 </MudStack>
 
@@ -45,9 +51,11 @@
 		dota.ToggleOnline();
 		Snackbar.Add("Online toggled", Severity.Info);
 	}
-	
+
 	public void Apply() {
 		dota.AccountName = Name;
 		Snackbar.Add("Account Name Changed!", Severity.Success);
 	}
+
+	public void ClearLog() => Log = "";
 }
