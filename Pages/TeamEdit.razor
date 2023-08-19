@@ -69,6 +69,7 @@
 	private void OnTeamCreate(ClientGCMsgProtobuf<CMsgDOTACreateTeamResponse> response)
 	{
 		teamService.LoadTeams();
+		Snackbar.Add("New Team Created!", Severity.Success);
 	}
 
 	public void Apply()

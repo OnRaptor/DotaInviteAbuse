@@ -119,4 +119,7 @@
       </None>
     </ItemGroup>
 
+	<PropertyGroup>
+		<DebugType>embedded</DebugType>
+	</PropertyGroup>
 </Project>
