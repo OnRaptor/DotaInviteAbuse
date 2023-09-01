@@ -1,11 +1,15 @@
 # DotaInviteAbuse
-Possibilities:
+### Possibilities:
 - Spam invites to any account from selected team
 - Change team name
 - Create new team
 - Change account nickname
 
-For *fun* purposes **ONLY**
+### For *fun* purposes **ONLY**
+
+#### Available platforms:
+- Windows
+- Android
 
 ## Download
 #### Download from [last release](https://github.com/OnRaptor/DotaInviteAbuse/releases/latest) page
